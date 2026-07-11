@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 50px; }
+        .weather-container { max-width: 400px; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+        input, button { padding: 8px; margin: 5px 0; width: 100%; box-sizing: border-box; }
+        .result { margin-top: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="weather-container">
+        <h2>Weather App</h2>
+        <input type="text" id="city" placeholder="Enter city name">
+        <button onclick="getWeather()">Get Weather</button>
+
+        <div class="result">
+            <h3 id="cityName"></h3>
+            <p id="temperature"></p>
+            <p id="humidity"></p>
+            <p id="wind"></p>
+            <p id="description"></p>
+        </div>
+    </div>
+
+    <script>
+        const apiKey = "6789f198377d7d358c4170dcbfc40328";
+
+        async function getWeather() {
+            const city = document.getElementById("city").value;
+
+            if (city === "") {
+                alert("Please enter a city name.");
+                return;
+            }
+
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error("City not found");
+                }
+
+                const data = await response.json();
+
+                document.getElementById("cityName").innerHTML = data.name;
+                document.getElementById("temperature").innerHTML = "🌡 Temperature: " + data.main.temp + " °C";
+                document.getElementById("humidity").innerHTML = "💧 Humidity: " + data.main.humidity + "%";
+                document.getElementById("wind").innerHTML = "🌬 Wind Speed: " + data.wind.speed + " m/s";
+                document.getElementById("description").innerHTML = "☁ Weather: " + data.weather[0].description;
+
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+    </script>
+</body>
+</html>
